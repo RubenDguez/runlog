@@ -1,26 +1,27 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Box } from "@mui/material";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { RunFilters, Runs } from "./components/tables/run";
+import { New, Update } from "./components/forms/run";
+import { Error } from "./components/UI/Error";
+import { Authorized } from "./layouts/Authorized";
 
-function App() {
+export const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Box sx={{ margin: "1rem", padding: "1rem" }}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Authorized />}>
+            <Route path="" element={"HOME"} />
+            <Route path="runfilters" element={<RunFilters />} />
+            <Route path="runs" element={<Runs />} />
+            <Route path="runform" element={<New />} />
+            <Route path="runform/:id" element={<Update />} />
+            <Route path="error" element={<Error />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </Box>
   );
-}
+};
 
 export default App;
