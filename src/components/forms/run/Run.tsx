@@ -3,6 +3,7 @@ import { useCallback, useMemo } from "react";
 import {
   useCreateMutation,
   useGetAllQuery,
+  useUpdateMutation,
 } from "../../../features/run/runDTOSlice";
 import { Switch, Button, TextField } from "../../UI/common";
 
@@ -11,14 +12,16 @@ import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { initialState, setRunState } from "../../../features/run/runSlice";
 
 export interface IRun {
+  id?: number;
   isUpdate?: boolean;
 }
 
-export const Run = ({ isUpdate = false }: IRun) => {
+export const Run = ({ id = 0, isUpdate = false }: IRun) => {
   const [state, currUser] = useAppSelector((state) => [state.run, state.user]);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [addRun] = useCreateMutation();
+  const [update] = useUpdateMutation();
   const { refetch } = useGetAllQuery();
 
   const isDropOffValid = useMemo(() => {
@@ -29,7 +32,7 @@ export const Run = ({ isUpdate = false }: IRun) => {
   }, [state.pickUpDate, state.dropOffDate]);
 
   const isFormValid = useMemo(() => {
-    const { secondLoad, extras, emptyMiles, ...rest } = state; // * omiting fields which will not be tested
+    const { secondLoad, extras, emptyMiles, ...rest } = state; // * omitting fields which will not be tested
     let valid: boolean[] = [];
 
     Object.values(rest).forEach((fe) => {
@@ -44,7 +47,7 @@ export const Run = ({ isUpdate = false }: IRun) => {
   }, [dispatch]);
 
   const handleCancel = useCallback(() => {
-    navigate("/");
+    navigate(-1);
   }, [navigate]);
 
   const handleSave = useCallback(async () => {
@@ -57,6 +60,17 @@ export const Run = ({ isUpdate = false }: IRun) => {
       console.error(err);
     }
   }, [state, currUser, refetch, handleClear, addRun]);
+
+  const handleUpdate = useCallback(async () => {
+    const preparedData: IRun = { ...state, ...currUser, id } as IRun;
+    try {
+      await update({ id, ...preparedData });
+      refetch();
+      navigate(-1);
+    } catch (err) {
+      console.error("error from try => ", err);
+    }
+  }, [id, state, currUser, update, refetch, navigate]);
 
   type TKey = keyof typeof initialState;
   const handleChange = useCallback(
@@ -123,7 +137,7 @@ export const Run = ({ isUpdate = false }: IRun) => {
       </Grid>
       <Grid item xs={12} lg={6}>
         <TextField
-          label="Dropoff location"
+          label="Drop off location"
           type="text"
           value={state.dropOffLocation}
           onChange={(e) =>
@@ -139,19 +153,19 @@ export const Run = ({ isUpdate = false }: IRun) => {
           onChange={(e) => handleChange("pickUpDate", String(e.target.value))}
           error={isDropOffValid}
           helperText={
-            isDropOffValid ? "Pickup date is greater than dropoff date" : ""
+            isDropOffValid ? "Pickup date is greater than drop off date" : ""
           }
         />
       </Grid>
       <Grid item xs={12} lg={6}>
         <TextField
-          label="Dropoff date"
+          label="Drop off date"
           type="date"
           value={state.dropOffDate.toString().substring(0, 10)}
           onChange={(e) => handleChange("dropOffDate", String(e.target.value))}
           error={isDropOffValid}
           helperText={
-            isDropOffValid ? "Dropoff date is less than pickup date" : ""
+            isDropOffValid ? "Drop off date is less than pickup date" : ""
           }
         />
       </Grid>
@@ -195,15 +209,28 @@ export const Run = ({ isUpdate = false }: IRun) => {
               Cancel
             </Button>
           </Grid>
-          <Grid item xs={12} lg={isUpdate ? 6 : 4}>
-            <Button
-              color="primary"
-              onClick={handleSave}
-              disabled={!isFormValid}
-            >
-              {isUpdate ? "Update" : "Save"}
-            </Button>
-          </Grid>
+          {isUpdate && (
+            <Grid item xs={12} lg={isUpdate ? 6 : 4}>
+              <Button
+                color="warning"
+                onClick={handleUpdate}
+                disabled={!isFormValid}
+              >
+                Update
+              </Button>
+            </Grid>
+          )}
+          {!isUpdate && (
+            <Grid item xs={12} lg={isUpdate ? 6 : 4}>
+              <Button
+                color="primary"
+                onClick={handleSave}
+                disabled={!isFormValid}
+              >
+                Save
+              </Button>
+            </Grid>
+          )}
         </Grid>
       </Grid>
     </Grid>

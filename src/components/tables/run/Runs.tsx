@@ -1,18 +1,18 @@
-import { Paper } from "@mui/material";
-import { Box } from "@mui/system";
+import { Box, Grid, Paper, Stack, Switch, Typography } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
+import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import {
-  setExpandedAcordrion,
-  toogleAccordion,
+  setExpandedAccordion,
+  toggleAccordion,
 } from "../../../features/app/appSlice";
 import { useGetAllQuery } from "../../../features/run/runDTOSlice";
 import { IRunStateDTO } from "../../../types";
-import { Switch } from "../../UI/common";
 import { Loader } from "../../UI/Loader";
 import { NoData } from "../../UI/NoData";
 import { Table } from "./Table";
+import { Fab } from "../../UI/common";
 
 interface IRunByWeek {
   year?: number;
@@ -30,12 +30,12 @@ export const Runs = ({ year = 0, week = 0 }: IRunByWeek) => {
     setDescOrder(!descOrder);
   }, [descOrder]);
 
-  const handleToogleExpandAccordion = useCallback(() => {
-    dispatch(toogleAccordion());
+  const handleToggleExpandAccordion = useCallback(() => {
+    dispatch(toggleAccordion());
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch(setExpandedAcordrion(true));
+    dispatch(setExpandedAccordion(true));
   }, [dispatch]);
 
   // * If no year and/or week has been set, we will get
@@ -81,32 +81,65 @@ export const Runs = ({ year = 0, week = 0 }: IRunByWeek) => {
 
   return (
     <>
-      <Paper elevation={1} sx={{ padding: "0.25rem 1rem" }}>
-        <Switch
-          label={expandAccordion ? "Collapse All" : "Expand All"}
-          checked={expandAccordion}
-          onClick={handleToogleExpandAccordion}
-        />
-        <Switch
-          label={`Sorting: ${descOrder ? "DESC" : "ASC"}`}
-          checked={descOrder}
-          onClick={handleTootleSorting}
-        />
-      </Paper>
+      {(!year || !week) && (
+        <Paper
+          elevation={1}
+          sx={{
+            padding: "0.25rem 1rem",
+            marginBottom: "8px",
+          }}
+        >
+          <Grid container spacing={1}>
+            <Grid item xs={6}>
+              <Stack
+                direction="row"
+                spacing={1}
+                alignItems="center"
+                justifyContent="center"
+              >
+                <Typography variant="caption">COLLAPSED</Typography>
+                <Switch
+                  size="small"
+                  checked={expandAccordion}
+                  onClick={handleToggleExpandAccordion}
+                />
+                <Typography variant="caption">EXPANDED</Typography>
+              </Stack>
+            </Grid>
+            <Grid item xs={6}>
+              <Stack
+                direction="row"
+                spacing={1}
+                alignItems="center"
+                justifyContent="center"
+              >
+                <Typography variant="caption">ASC</Typography>
+                <Switch
+                  size="small"
+                  checked={descOrder}
+                  onClick={handleTootleSorting}
+                />
+                <Typography variant="caption">DESC</Typography>
+              </Stack>
+            </Grid>
+          </Grid>
+        </Paper>
+      )}
+
       {years
         .sort((a, b) => (descOrder ? b - a : a - b))
-        .map((feyear) =>
+        .map((mapYear) =>
           weeks
             .sort((a, b) => (descOrder ? b - a : a - b))
-            .map((feweek) => {
+            .map((mapWeek) => {
               let newData: IRunStateDTO[] = data!.filter(
-                (f) => f.year === feyear && f.weekNumber === feweek
+                (f) => f.year === mapYear && f.weekNumber === mapWeek
               );
               if (newData.length > 0)
                 return (
-                  <Box key={`${feweek}${feyear}`}>
+                  <Box key={`${mapWeek}${mapYear}`}>
                     <Table
-                      title={`Year: ${feyear} - Week: ${feweek}`}
+                      title={`YEAR: ${mapYear} - WEEK: ${mapWeek}`}
                       rows={newData}
                     />
                   </Box>
@@ -114,6 +147,9 @@ export const Runs = ({ year = 0, week = 0 }: IRunByWeek) => {
               return null;
             })
         )}
+      <Fab action={() => navigate("/run-form")}>
+        <AddIcon sx={{ fontSize: "3rem" }} />
+      </Fab>
     </>
   );
 };

@@ -1,12 +1,13 @@
-import { Autocomplete, Grid, TextField } from "@mui/material";
+import { Autocomplete, Grid } from "@mui/material";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import {
-  setExpandedAcordrion,
+  setExpandedAccordion,
   setFilterWeek,
   setFilterYear,
 } from "../../../features/app/appSlice";
 import { useGetAllQuery } from "../../../features/run/runDTOSlice";
+import { TextField } from "../../UI/common";
 import { Runs } from "./Runs";
 
 export const RunFilters = () => {
@@ -26,6 +27,7 @@ export const RunFilters = () => {
       new Set(
         data
           ?.filter((f) => f.year === Number(year))
+          .sort((a, b) => b.weekNumber - a.weekNumber)
           .map((m) => m.weekNumber.toString())
       )
     );
@@ -48,14 +50,8 @@ export const RunFilters = () => {
   );
 
   useEffect(() => {
-    dispatch(setExpandedAcordrion(false));
+    dispatch(setExpandedAccordion(true));
   }, [dispatch]);
-
-  useEffect(() => {
-    if (year === null || week === null) {
-      dispatch(setExpandedAcordrion(false));
-    } else dispatch(setExpandedAcordrion(true));
-  }, [year, week, dispatch]);
 
   return (
     <>
@@ -63,6 +59,7 @@ export const RunFilters = () => {
         <Grid item xs={6}>
           <Autocomplete
             disablePortal
+            size="small"
             options={yearsOptions}
             value={year}
             onChange={(event: any, newValue: string | null) => {
@@ -74,6 +71,7 @@ export const RunFilters = () => {
         <Grid item xs={6}>
           <Autocomplete
             disablePortal
+            size="small"
             options={weeksOptions}
             value={week}
             onChange={(event: any, newValue: string | null) => {

@@ -3,9 +3,11 @@ import { IApp } from "../../types";
 
 export const initialState: IApp = {
   theme: "dark",
-  expandAccordion: false,
+  expandAccordion: true,
   filterYear: null,
   filterWeek: null,
+  drawerWidth: 50,
+  drawerExpanded: false,
 };
 
 const appSlice = createSlice({
@@ -15,10 +17,10 @@ const appSlice = createSlice({
     setTheme(state, action: PayloadAction<"dark" | "light">) {
       state.theme = action.payload;
     },
-    toogleAccordion(state) {
+    toggleAccordion(state) {
       state.expandAccordion = !state.expandAccordion;
     },
-    setExpandedAcordrion(state, action: PayloadAction<boolean>) {
+    setExpandedAccordion(state, action: PayloadAction<boolean>) {
       state.expandAccordion = action.payload;
     },
     setFilterYear(state, action: PayloadAction<string | null>) {
@@ -27,14 +29,19 @@ const appSlice = createSlice({
     setFilterWeek(state, action: PayloadAction<string | null>) {
       state.filterWeek = action.payload;
     },
+    toggleDrawer(state) {
+      state.drawerExpanded = !state.drawerExpanded;
+      state.drawerWidth = state.drawerExpanded ? 200 : 50;
+    },
   },
 });
 
 export const {
   setTheme,
-  toogleAccordion,
-  setExpandedAcordrion,
+  toggleAccordion,
+  setExpandedAccordion,
   setFilterYear,
   setFilterWeek,
+  toggleDrawer,
 } = appSlice.actions;
 export default appSlice.reducer;

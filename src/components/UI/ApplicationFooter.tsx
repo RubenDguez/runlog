@@ -1,9 +1,9 @@
 import { AppBar, Toolbar, Typography } from "@mui/material";
-
-export const DRAWER_WIDTH = 245;
+import { useAppSelector } from "../../app/hooks";
 
 export const ApplicationFooter = () => {
   const currentYear = new Date().getFullYear();
+  const drawerWidth = useAppSelector((state) => state.app.drawerWidth);
 
   return (
     <AppBar
@@ -11,10 +11,11 @@ export const ApplicationFooter = () => {
       elevation={1}
       color="inherit"
       sx={{
-        width: `calc(100% - ${DRAWER_WIDTH}px)`,
-        ml: `${DRAWER_WIDTH}px`,
+        width: `calc(100% - ${drawerWidth}px)`,
+        ml: `${drawerWidth}px`,
         top: "auto",
         bottom: 0,
+        transition: "ease-in-out 0.25s",
       }}
     >
       <Toolbar variant="dense">

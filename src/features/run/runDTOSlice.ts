@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { IRunStateDTO } from "../../types";
+import { IRun, IRunStateDTO } from "../../types";
 
 export const initialState: IRunStateDTO = {
   id: 0,
@@ -55,11 +55,11 @@ export const runDTOApi = createApi({
         body: run,
       }),
     }),
-    update: builder.mutation({
-      query: ({ id, run }) => ({
+    update: builder.mutation<IRun, Partial<IRun> & Pick<IRun, "id">>({
+      query: ({ id, ...patch }) => ({
         url: `/run/${id}`,
-        method: "PUT",
-        body: run,
+        method: "PATCH",
+        body: patch,
       }),
     }),
     delete: builder.mutation({

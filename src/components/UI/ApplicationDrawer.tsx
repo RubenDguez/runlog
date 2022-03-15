@@ -1,83 +1,76 @@
+import { NavLink, To } from "react-router-dom";
+
 import {
   Divider,
   Drawer,
   List,
-  ListItem,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
   Toolbar,
   useTheme,
 } from "@mui/material";
-import { DRAWER_WIDTH } from "./ApplicationBar";
-import { Link } from "react-router-dom";
+import { routes } from "../../routes";
 
-import AddCircleIcon from "@mui/icons-material/AddCircle";
-import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
-import HomeIcon from "@mui/icons-material/Home";
+import { ReactElement } from "react";
+import { useAppSelector } from "../../app/hooks";
 
 export const ApplicationDrawer = () => {
   const theme = useTheme();
+  const drawerWidth = useAppSelector((state) => state.app.drawerWidth);
+
   return (
     <Drawer
       sx={{
-        width: DRAWER_WIDTH,
+        width: drawerWidth,
         flexShrink: 0,
+        transition: "ease-in-out 0.25s",
         "& .MuiDrawer-paper": {
-          width: DRAWER_WIDTH,
+          width: drawerWidth,
           boxSizing: "border-box",
+          transition: "ease-in-out 0.25s",
         },
       }}
       variant="permanent"
       anchor="left"
     >
-      <Toolbar sx={{ boxShadow: theme.shadows[1] }} />
+      <Toolbar
+        sx={{ boxShadow: theme.shadows[1], transition: "ease-in-out 0.25s" }}
+      />
       <Divider />
       <List>
-        <Link to="">
-          <ListItem button>
-            <ListItemIcon>
-              <HomeIcon />
-            </ListItemIcon>
-            <ListItemText
-              primary="Home"
-              sx={{ color: theme.palette.text.primary }}
-            />
-          </ListItem>
-        </Link>
-        <Link to="runs">
-          <ListItem button>
-            <ListItemIcon>
-              <FormatListNumberedIcon />
-            </ListItemIcon>
-            <ListItemText
-              primary="Run List"
-              sx={{ color: theme.palette.text.primary }}
-            />
-          </ListItem>
-        </Link>
-        <Link to="runfilters">
-          <ListItem button>
-            <ListItemIcon>
-              <FormatListNumberedIcon />
-            </ListItemIcon>
-            <ListItemText
-              primary="Run List with Filters"
-              sx={{ color: theme.palette.text.primary }}
-            />
-          </ListItem>
-        </Link>
-        <Link to="runform">
-          <ListItem button>
-            <ListItemIcon>
-              <AddCircleIcon color="disabled" />
-            </ListItemIcon>
-            <ListItemText
-              primary="Add Run"
-              sx={{ color: theme.palette.text.primary }}
-            />
-          </ListItem>
-        </Link>
+        {routes.map(
+          (m, i) =>
+            m.text &&
+            m.icon &&
+            m.to && <MenuItem key={i} to={m.to} icon={m.icon} text={m.text} />
+        )}
       </List>
     </Drawer>
+  );
+};
+
+interface IMenuItem {
+  text: String;
+  to: To;
+  icon: ReactElement;
+}
+
+const MenuItem = ({ text, to, icon }: IMenuItem) => {
+  const theme = useTheme();
+  return (
+    <NavLink to={to}>
+      {({ isActive }) => (
+        <ListItemButton
+          selected={isActive}
+          sx={{ color: theme.palette.text.primary }}
+        >
+          <ListItemIcon sx={{ color: theme.palette.text.primary }}>
+            {icon}
+          </ListItemIcon>
+          <ListItemText primary={text} />
+        </ListItemButton>
+      )}
+    </NavLink>
   );
 };

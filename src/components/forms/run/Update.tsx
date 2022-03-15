@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import { useAppDispatch } from "../../../app/hooks";
 import { useGetByIdQuery } from "../../../features/run/runDTOSlice";
 import { setRunState } from "../../../features/run/runSlice";
-import { IRunState } from "../../../types";
 import { Loader } from "../../UI/Loader";
 import { Run } from "./Run";
 
@@ -14,10 +13,21 @@ export const Update = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      dispatch(setRunState(data as IRunState));
+      const {
+        baseEntity,
+        emptyCash,
+        id,
+        links,
+        loadedCash,
+        totalTrip,
+        weekNumber,
+        year,
+        ...rest
+      } = data;
+      dispatch(setRunState(rest));
     }
   }, [isLoading, isSuccess, data, dispatch]);
 
   if (isLoading) return <Loader />;
-  return <Run isUpdate={!!data} />;
+  return <Run id={Number(params.id)} isUpdate={!!data} />;
 };

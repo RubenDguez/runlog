@@ -52,9 +52,30 @@ export interface IApp {
   expandAccordion: boolean;
   filterYear: string | null;
   filterWeek: string | null;
+  drawerWidth: number;
+  drawerExpanded: boolean;
 }
 
 export interface IUser {
+  atPickUp: boolean;
+  secondLoadRate: number;
+  baseRate: number;
+  emptyRate: number;
+  minMiles: number;
+  userId: number;
+}
+
+export interface IRun {
+  id: number;
+  loadNumber: number;
+  secondLoad: boolean;
+  pickUpLocation: string;
+  dropOffLocation: string;
+  pickUpDate: string;
+  dropOffDate: string;
+  loadedMiles: number;
+  emptyMiles: number;
+  extras: number;
   atPickUp: boolean;
   secondLoadRate: number;
   baseRate: number;

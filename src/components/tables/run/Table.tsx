@@ -70,13 +70,14 @@ export const Table = ({ title = "All Runs", rows }: IRunTable) => {
       expanded={expanded}
       variant="outlined"
       TransitionProps={{ unmountOnExit: true }}
+      sx={{ marginTop: "4px" }}
     >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon onClick={tootleExpanded} />}
         id={`${title}-header`}
         aria-controls={`${title}-content`}
       >
-        <Typography>{title}</Typography>
+        <Typography variant="subtitle2">{title}</Typography>
       </AccordionSummary>
       <AccordionDetails>
         <TableContainer component={Box}>
