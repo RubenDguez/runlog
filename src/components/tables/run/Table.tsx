@@ -17,7 +17,7 @@ import { TableHeader } from "./TableHeader";
 import { TableRows } from "./TableRows";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { useAppSelector } from "../../../app/hooks";
+import { useAppSelector } from "../../../store/hooks";
 
 export interface IRunTable {
   title?: string;

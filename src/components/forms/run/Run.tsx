@@ -1,46 +1,38 @@
 import { Grid } from "@mui/material";
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import {
   useCreateMutation,
-  useGetAllQuery,
   useUpdateMutation,
-} from "../../../features/run/runDTOSlice";
+} from "../../../store/features/run/runDTOSlice";
 import { Switch, Button, TextField } from "../../UI/common";
 
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import { initialState, setRunState } from "../../../features/run/runSlice";
-
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import {
+  initialState,
+  setRunState,
+} from "../../../store/features/run/runSlice";
+import { useRunFormValidation } from "../../../hooks/useRunFormValidation";
+import { useSnackbar } from "notistack";
 export interface IRun {
   id?: number;
   isUpdate?: boolean;
 }
 
 export const Run = ({ id = 0, isUpdate = false }: IRun) => {
-  const [state, currUser] = useAppSelector((state) => [state.run, state.user]);
+  const [state, currUser, runList] = useAppSelector((state) => [
+    state.run,
+    state.user,
+    state.runList,
+  ]);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [addRun] = useCreateMutation();
   const [update] = useUpdateMutation();
-  const { refetch } = useGetAllQuery();
+  const { enqueueSnackbar: message } = useSnackbar();
 
-  const isDropOffValid = useMemo(() => {
-    let startingDate = new Date(state.pickUpDate.toString().substring(0, 10));
-    let endingDate = new Date(state.dropOffDate.toString().substring(0, 10));
-
-    return endingDate.getTime() < startingDate.getTime();
-  }, [state.pickUpDate, state.dropOffDate]);
-
-  const isFormValid = useMemo(() => {
-    const { secondLoad, extras, emptyMiles, ...rest } = state; // * omitting fields which will not be tested
-    let valid: boolean[] = [];
-
-    Object.values(rest).forEach((fe) => {
-      return valid.push(!!fe);
-    });
-
-    return !valid.some((s) => s === false) && !isDropOffValid;
-  }, [state, isDropOffValid]);
+  const { isDropOffValid, isFormValid, isLoadNumberValid } =
+    useRunFormValidation(runList, state, isUpdate);
 
   const handleClear = useCallback(() => {
     dispatch(setRunState({ ...initialState }));
@@ -54,23 +46,23 @@ export const Run = ({ id = 0, isUpdate = false }: IRun) => {
     const preparedData = { ...state, ...currUser };
     try {
       await addRun(preparedData).unwrap();
-      refetch();
       handleClear();
+      message("Run was saved successfully", { color: "success" });
     } catch (err) {
-      console.error(err);
+      message(`${err}`, { color: "error" });
     }
-  }, [state, currUser, refetch, handleClear, addRun]);
+  }, [state, currUser, handleClear, addRun, message]);
 
   const handleUpdate = useCallback(async () => {
     const preparedData: IRun = { ...state, ...currUser, id } as IRun;
     try {
       await update({ id, ...preparedData });
-      refetch();
+      message("Run was updated successfully", { color: "success" });
       navigate(-1);
     } catch (err) {
-      console.error("error from try => ", err);
+      message(`${err}`, { color: "error" });
     }
-  }, [id, state, currUser, update, refetch, navigate]);
+  }, [id, state, currUser, update, navigate, message]);
 
   type TKey = keyof typeof initialState;
   const handleChange = useCallback(
@@ -93,7 +85,7 @@ export const Run = ({ id = 0, isUpdate = false }: IRun) => {
           );
         }
 
-        if (key === "pickUpDate" || key === "dropOffDate") {
+        if ((key === "pickUpDate" || key === "dropOffDate") && change !== "") {
           dispatch(
             setRunState({
               ...state,
@@ -108,15 +100,18 @@ export const Run = ({ id = 0, isUpdate = false }: IRun) => {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12} lg={6}>
+      <Grid item xs={12} md={6}>
         <TextField
           label="Load number"
           type="number"
           value={state.loadNumber}
           onChange={(e) => handleChange("loadNumber", Number(e.target.value))}
+          error={!isLoadNumberValid}
+          helperText={!isLoadNumberValid ? "Load number already exists" : ""}
+          disabled={isUpdate || false}
         />
       </Grid>
-      <Grid item xs={12} lg={6}>
+      <Grid item xs={12} md={6}>
         <Switch
           label="Second Load"
           size="small"
@@ -125,7 +120,7 @@ export const Run = ({ id = 0, isUpdate = false }: IRun) => {
           onChange={(e) => handleChange("secondLoad", Boolean(e.target.value))}
         />
       </Grid>
-      <Grid item xs={12} lg={6}>
+      <Grid item xs={12} md={6}>
         <TextField
           label="Pickup location"
           type="text"
@@ -135,7 +130,7 @@ export const Run = ({ id = 0, isUpdate = false }: IRun) => {
           }
         />
       </Grid>
-      <Grid item xs={12} lg={6}>
+      <Grid item xs={12} md={6}>
         <TextField
           label="Drop off location"
           type="text"
@@ -145,31 +140,31 @@ export const Run = ({ id = 0, isUpdate = false }: IRun) => {
           }
         />
       </Grid>
-      <Grid item xs={12} lg={6}>
+      <Grid item xs={12} md={6}>
         <TextField
           label="Pickup date"
           type="date"
           value={state.pickUpDate.toString().substring(0, 10)}
           onChange={(e) => handleChange("pickUpDate", String(e.target.value))}
-          error={isDropOffValid}
+          error={!isDropOffValid}
           helperText={
-            isDropOffValid ? "Pickup date is greater than drop off date" : ""
+            !isDropOffValid ? "Pickup date is greater than drop off date" : ""
           }
         />
       </Grid>
-      <Grid item xs={12} lg={6}>
+      <Grid item xs={12} md={6}>
         <TextField
           label="Drop off date"
           type="date"
           value={state.dropOffDate.toString().substring(0, 10)}
           onChange={(e) => handleChange("dropOffDate", String(e.target.value))}
-          error={isDropOffValid}
+          error={!isDropOffValid}
           helperText={
-            isDropOffValid ? "Drop off date is less than pickup date" : ""
+            !isDropOffValid ? "Drop off date is less than pickup date" : ""
           }
         />
       </Grid>
-      <Grid item xs={12} lg={4}>
+      <Grid item xs={12} md={4}>
         <TextField
           label="Loaded miles"
           type="number"
@@ -177,7 +172,7 @@ export const Run = ({ id = 0, isUpdate = false }: IRun) => {
           onChange={(e) => handleChange("loadedMiles", Number(e.target.value))}
         />
       </Grid>
-      <Grid item xs={12} lg={4}>
+      <Grid item xs={12} md={4}>
         <TextField
           label="Empty miles"
           type="number"
@@ -186,7 +181,7 @@ export const Run = ({ id = 0, isUpdate = false }: IRun) => {
           onChange={(e) => handleChange("emptyMiles", Number(e.target.value))}
         />
       </Grid>
-      <Grid item xs={12} lg={4}>
+      <Grid item xs={12} md={4}>
         <TextField
           label="Extras"
           type="text"
@@ -198,19 +193,19 @@ export const Run = ({ id = 0, isUpdate = false }: IRun) => {
       <Grid item xs={12}>
         <Grid container spacing={2}>
           {!isUpdate && (
-            <Grid item xs={12} lg={isUpdate ? 6 : 4}>
+            <Grid item xs={12} md={isUpdate ? 6 : 4}>
               <Button color="secondary" onClick={handleClear}>
                 Clear
               </Button>
             </Grid>
           )}
-          <Grid item xs={12} lg={isUpdate ? 6 : 4}>
+          <Grid item xs={12} md={isUpdate ? 6 : 4}>
             <Button color="error" onClick={handleCancel}>
               Cancel
             </Button>
           </Grid>
           {isUpdate && (
-            <Grid item xs={12} lg={isUpdate ? 6 : 4}>
+            <Grid item xs={12} md={isUpdate ? 6 : 4}>
               <Button
                 color="warning"
                 onClick={handleUpdate}
@@ -221,7 +216,7 @@ export const Run = ({ id = 0, isUpdate = false }: IRun) => {
             </Grid>
           )}
           {!isUpdate && (
-            <Grid item xs={12} lg={isUpdate ? 6 : 4}>
+            <Grid item xs={12} md={isUpdate ? 6 : 4}>
               <Button
                 color="primary"
                 onClick={handleSave}

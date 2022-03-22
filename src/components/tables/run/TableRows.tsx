@@ -6,22 +6,50 @@ import {
   TableRow,
 } from "@mui/material";
 import moment from "moment";
-import { IRunStateDTO } from "../../../types";
+import { EDialogResponse, EDialogType, IRunStateDTO } from "../../../types";
 import { toCurrency, toLocalString } from "../../../utils";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import FileOpenIcon from "@mui/icons-material/FileOpen";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useNavigate } from "react-router-dom";
-import { useDeleteMutation } from "../../../features/run/runDTOSlice";
+import { useDeleteMutation } from "../../../store/features/run/runDTOSlice";
 import { Tooltip } from "../../UI/common/Tooltip";
+import { useCallback, useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import { setDialogClear } from "../../../store/features/app/appSlice";
+import { useDialog } from "../../../hooks/useDialog";
 
 interface ITableRows {
   data: IRunStateDTO;
 }
 
 export const TableRows = ({ data }: ITableRows) => {
+  const response = useAppSelector((state) => state.app.dialog.response);
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [del] = useDeleteMutation();
+  const [deleteRow] = useDeleteMutation();
+  const [rowNumber, setRowNumber] = useState(0);
+  const dialog = useDialog();
+
+  const handleDeleteRow = useCallback(
+    (id: number) => {
+      setRowNumber(id);
+      dialog(
+        EDialogType.YES_NO,
+        "delete",
+        "Are you sure you want to delete this record?"
+      );
+    },
+    [dialog]
+  );
+
+  useEffect(() => {
+    if (response === EDialogResponse.YES && rowNumber !== 0) {
+      deleteRow(rowNumber);
+      dispatch(setDialogClear());
+    }
+  }, [response, rowNumber, deleteRow, dispatch]);
+
   return (
     <TableRow>
       <TableCell>
@@ -48,9 +76,7 @@ export const TableRows = ({ data }: ITableRows) => {
             <IconButton
               color="error"
               size="small"
-              onClick={() => {
-                del(data.id);
-              }}
+              onClick={() => handleDeleteRow(data.id)}
             >
               <DeleteIcon fontSize="small" />
             </IconButton>

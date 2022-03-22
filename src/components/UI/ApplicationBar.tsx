@@ -3,8 +3,8 @@ import { AppBar, IconButton, Switch, Toolbar, Typography } from "@mui/material";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { setTheme, toggleDrawer } from "../../features/app/appSlice";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { setTheme, toggleDrawer } from "../../store/features/app/appSlice";
 import { useCallback } from "react";
 
 import DarkModeIcon from "@mui/icons-material/DarkMode";

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -10,9 +10,9 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import { useGetAllQuery } from "../../features/run/runDTOSlice";
 import { Loader } from "./Loader";
 import { Container } from "@mui/material";
+import { useAppSelector } from "../../store/hooks";
 
 ChartJS.register(
   CategoryScale,
@@ -51,7 +51,8 @@ export interface IChartData {
 }
 
 export const Chart = () => {
-  const { data, isLoading } = useGetAllQuery();
+  const data = useAppSelector((state) => state.runList);
+  const [isLoading, setIsLoading] = useState(true);
 
   const chartData = useMemo(() => {
     if (data) {
@@ -109,6 +110,10 @@ export const Chart = () => {
         ],
       };
     }
+  }, [data]);
+
+  useEffect(() => {
+    if (data.length > 0) setIsLoading(false);
   }, [data]);
 
   if (isLoading) return <Loader />;

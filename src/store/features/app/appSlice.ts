@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IApp } from "../../types";
+import { EDialogResponse, EDialogType, IApp } from "../../../types";
 
 export const initialState: IApp = {
   theme: "dark",
@@ -8,6 +8,13 @@ export const initialState: IApp = {
   filterWeek: null,
   drawerWidth: 50,
   drawerExpanded: false,
+  dialog: {
+    type: null,
+    show: false,
+    response: null,
+    title: null,
+    message: null,
+  },
 };
 
 const appSlice = createSlice({
@@ -33,6 +40,28 @@ const appSlice = createSlice({
       state.drawerExpanded = !state.drawerExpanded;
       state.drawerWidth = state.drawerExpanded ? 200 : 50;
     },
+    setDialogType(state, action: PayloadAction<EDialogType | null>) {
+      state.dialog.type = action.payload;
+    },
+    setDialogShow(state, action: PayloadAction<boolean>) {
+      state.dialog.show = action.payload;
+    },
+    setDialogResponse(state, action: PayloadAction<EDialogResponse | null>) {
+      state.dialog.response = action.payload;
+    },
+    setDialogTitle(state, action: PayloadAction<string | null | undefined>) {
+      state.dialog.title = action.payload;
+    },
+    setDialogMessage(state, action: PayloadAction<string | null>) {
+      state.dialog.message = action.payload;
+    },
+    setDialogClear(state) {
+      state.dialog.show = false;
+      state.dialog.message = null;
+      state.dialog.title = null;
+      state.dialog.response = null;
+      state.dialog.type = null;
+    },
   },
 });
 
@@ -43,5 +72,11 @@ export const {
   setFilterYear,
   setFilterWeek,
   toggleDrawer,
+  setDialogType,
+  setDialogShow,
+  setDialogResponse,
+  setDialogTitle,
+  setDialogMessage,
+  setDialogClear,
 } = appSlice.actions;
 export default appSlice.reducer;

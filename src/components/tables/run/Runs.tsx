@@ -2,12 +2,11 @@ import { Box, Grid, Paper, Stack, Switch, Typography } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import {
   setExpandedAccordion,
   toggleAccordion,
-} from "../../../features/app/appSlice";
-import { useGetAllQuery } from "../../../features/run/runDTOSlice";
+} from "../../../store/features/app/appSlice";
 import { IRunStateDTO } from "../../../types";
 import { Loader } from "../../UI/Loader";
 import { NoData } from "../../UI/NoData";
@@ -20,11 +19,12 @@ interface IRunByWeek {
 }
 
 export const Runs = ({ year = 0, week = 0 }: IRunByWeek) => {
-  const { data, isLoading, isError } = useGetAllQuery();
+  const data = useAppSelector((state) => state.runList);
   const expandAccordion = useAppSelector((state) => state.app.expandAccordion);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [descOrder, setDescOrder] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleTootleSorting = useCallback(() => {
     setDescOrder(!descOrder);
@@ -37,6 +37,10 @@ export const Runs = ({ year = 0, week = 0 }: IRunByWeek) => {
   useEffect(() => {
     dispatch(setExpandedAccordion(true));
   }, [dispatch]);
+
+  useEffect(() => {
+    if (data.length > 0) setIsLoading(false);
+  }, [data]);
 
   // * If no year and/or week has been set, we will get
   // * all years and weeks available in database
@@ -77,7 +81,6 @@ export const Runs = ({ year = 0, week = 0 }: IRunByWeek) => {
   )
     return <NoData />;
   if (isLoading) return <Loader />;
-  if (isError) navigate("/error");
 
   return (
     <>

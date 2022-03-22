@@ -1,17 +1,16 @@
 import { Autocomplete, Grid } from "@mui/material";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import {
   setExpandedAccordion,
   setFilterWeek,
   setFilterYear,
-} from "../../../features/app/appSlice";
-import { useGetAllQuery } from "../../../features/run/runDTOSlice";
+} from "../../../store/features/app/appSlice";
 import { TextField } from "../../UI/common";
 import { Runs } from "./Runs";
 
 export const RunFilters = () => {
-  const { data } = useGetAllQuery();
+  const data = useAppSelector((state) => state.runList);
   const appState = useAppSelector((state) => state.app);
   const dispatch = useAppDispatch();
 

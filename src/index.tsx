@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 
 import ReactDOM from "react-dom";
 import App from "./App";
-import { store } from "./app/store";
+import { store } from "./store/store";
 import { ThemeProvider } from "./theme/ThemeProvider";
 import { SnackbarProvider } from "notistack";
 

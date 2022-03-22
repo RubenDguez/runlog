@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IRunState } from "../../types";
+import { IRunState } from "../../../types";
 
 export const initialState: IRunState = {
   loadNumber: 0,

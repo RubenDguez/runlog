@@ -54,6 +54,13 @@ export interface IApp {
   filterWeek: string | null;
   drawerWidth: number;
   drawerExpanded: boolean;
+  dialog: {
+    type: EDialogType | null;
+    show: boolean;
+    response: EDialogResponse | null;
+    title: string | null | undefined;
+    message: string | null;
+  };
 }
 
 export interface IUser {
@@ -82,4 +89,12 @@ export interface IRun {
   emptyRate: number;
   minMiles: number;
   userId: number;
+}
+
+export enum EDialogType {
+  YES_NO = "YES_NO",
+}
+
+export enum EDialogResponse {
+  YES = "YES",
 }

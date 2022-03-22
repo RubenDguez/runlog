@@ -1,5 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { IRun, IRunStateDTO } from "../../types";
+import { IRun, IRunStateDTO } from "../../../types";
+import {
+  createRun,
+  deleteRun,
+  setRunStateList,
+  updateRun,
+} from "./runListSlice";
 
 export const initialState: IRunStateDTO = {
   id: 0,
@@ -42,6 +48,14 @@ export const runDTOApi = createApi({
   endpoints: (builder) => ({
     getAll: builder.query<IRunStateDTO[], void>({
       query: () => `/runs`,
+      async onQueryStarted(id, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          if (data) dispatch(setRunStateList(data as IRunStateDTO[]));
+        } catch (err) {
+          console.log(`Error fetching run: ${id}!`);
+        }
+      },
     }),
     getById: builder.query<IRunStateDTO, number>({
       query: (id: number) => ({
@@ -54,6 +68,17 @@ export const runDTOApi = createApi({
         method: "POST",
         body: run,
       }),
+      async onQueryStarted(id, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          if (data) {
+            console.log("run was created");
+            dispatch(createRun(data as IRunStateDTO));
+          }
+        } catch (err) {
+          console.log(`Error while creating run ${id}`);
+        }
+      },
     }),
     update: builder.mutation<IRun, Partial<IRun> & Pick<IRun, "id">>({
       query: ({ id, ...patch }) => ({
@@ -61,12 +86,32 @@ export const runDTOApi = createApi({
         method: "PATCH",
         body: patch,
       }),
+      async onQueryStarted(id, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          if (data) {
+            console.log("data was updated");
+            dispatch(updateRun(data as IRunStateDTO));
+          }
+        } catch (err) {
+          console.log(`Error updating run with id: ${id}`);
+        }
+      },
     }),
     delete: builder.mutation({
       query: (id) => ({
         url: `/run/${id}`,
         method: "DELETE",
       }),
+      async onQueryStarted(id, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          console.log("data was erased");
+          dispatch(deleteRun(id));
+        } catch (err) {
+          console.log(`Error deleting run with id: ${id}`);
+        }
+      },
     }),
   }),
 });

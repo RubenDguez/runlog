@@ -1,6 +1,6 @@
 import { CssBaseline, ThemeProvider as TP } from "@mui/material";
 import { ReactNode, useEffect, useState } from "react";
-import { useAppSelector } from "../app/hooks";
+import { useAppSelector } from "../store/hooks";
 import { darkTheme, lightTheme } from "./theme";
 
 interface IThemeProvider {

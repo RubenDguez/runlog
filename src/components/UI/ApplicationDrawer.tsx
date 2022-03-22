@@ -13,7 +13,7 @@ import {
 import { routes } from "../../routes";
 
 import { ReactElement } from "react";
-import { useAppSelector } from "../../app/hooks";
+import { useAppSelector } from "../../store/hooks";
 
 export const ApplicationDrawer = () => {
   const theme = useTheme();

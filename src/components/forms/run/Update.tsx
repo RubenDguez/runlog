@@ -1,33 +1,41 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
-import { useAppDispatch } from "../../../app/hooks";
-import { useGetByIdQuery } from "../../../features/run/runDTOSlice";
-import { setRunState } from "../../../features/run/runSlice";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import { setRunState } from "../../../store/features/run/runSlice";
 import { Loader } from "../../UI/Loader";
 import { Run } from "./Run";
 
 export const Update = () => {
   const dispatch = useAppDispatch();
   const params = useParams();
-  const { data, isLoading, isSuccess } = useGetByIdQuery(Number(params.id));
+  const [runList] = useAppSelector((state) => [state.runList]);
+
+  const runUpdate = useMemo(() => {
+    return runList.find((f) => f.id === Number(params.id));
+  }, [params.id, runList]);
 
   useEffect(() => {
-    if (isSuccess) {
+    if (runUpdate) {
       const {
+        atPickUp,
         baseEntity,
+        baseRate,
         emptyCash,
-        id,
+        emptyRate,
         links,
         loadedCash,
+        minMiles,
+        secondLoadRate,
         totalTrip,
+        userId,
         weekNumber,
         year,
         ...rest
-      } = data;
+      } = runUpdate;
       dispatch(setRunState(rest));
     }
-  }, [isLoading, isSuccess, data, dispatch]);
+  }, [runUpdate, dispatch]);
 
-  if (isLoading) return <Loader />;
-  return <Run id={Number(params.id)} isUpdate={!!data} />;
+  if (!runUpdate) return <Loader />;
+  return <Run id={Number(params.id)} isUpdate={!!runUpdate} />;
 };

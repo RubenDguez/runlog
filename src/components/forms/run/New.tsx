@@ -1,6 +1,9 @@
 import { useEffect } from "react";
-import { useAppDispatch } from "../../../app/hooks";
-import { initialState, setRunState } from "../../../features/run/runSlice";
+import { useAppDispatch } from "../../../store/hooks";
+import {
+  initialState,
+  setRunState,
+} from "../../../store/features/run/runSlice";
 import { Run } from "./Run";
 
 export const New = () => {

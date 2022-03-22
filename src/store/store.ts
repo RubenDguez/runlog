@@ -1,9 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import runSliceReducer from "../features/run/runSlice";
-import appSliceReducer from "../features/app/appSlice";
-import userSliceReducer from "../features/user/userSlice";
+import runSliceReducer from "./features/run/runSlice";
+import appSliceReducer from "./features/app/appSlice";
+import userSliceReducer from "./features/user/userSlice";
+import runListSliceReducer from "./features/run/runListSlice";
 
-import { runDTOApi } from "../features/run/runDTOSlice";
+import { runDTOApi } from "./features/run/runDTOSlice";
 import { queryErrorLogger } from "./queryErrorLogger";
 
 export const store = configureStore({
@@ -11,6 +12,7 @@ export const store = configureStore({
     app: appSliceReducer,
     user: userSliceReducer,
     run: runSliceReducer,
+    runList: runListSliceReducer,
 
     [runDTOApi.reducerPath]: runDTOApi.reducer,
   },
