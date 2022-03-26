@@ -61,6 +61,11 @@ export interface IApp {
     title: string | null | undefined;
     message: string | null;
   };
+  snackbar: {
+    open: boolean;
+    message: string;
+    variant: "error" | "info" | "success" | "warning";
+  };
 }
 
 export interface IUser {

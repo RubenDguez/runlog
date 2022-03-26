@@ -15,6 +15,11 @@ export const initialState: IApp = {
     title: null,
     message: null,
   },
+  snackbar: {
+    open: false,
+    message: "",
+    variant: "success",
+  },
 };
 
 const appSlice = createSlice({
@@ -62,6 +67,18 @@ const appSlice = createSlice({
       state.dialog.response = null;
       state.dialog.type = null;
     },
+    toggleSnackbar(state) {
+      state.snackbar.open = !state.snackbar.open;
+    },
+    setSnackbarMessage(state, action: PayloadAction<string>) {
+      state.snackbar.message = action.payload;
+    },
+    setSnackbarVariant(
+      state,
+      action: PayloadAction<"error" | "info" | "success" | "warning">
+    ) {
+      state.snackbar.variant = action.payload;
+    },
   },
 });
 
@@ -78,5 +95,8 @@ export const {
   setDialogTitle,
   setDialogMessage,
   setDialogClear,
+  toggleSnackbar,
+  setSnackbarMessage,
+  setSnackbarVariant,
 } = appSlice.actions;
 export default appSlice.reducer;

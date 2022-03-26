@@ -1,6 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { IRun, IRunStateDTO } from "../../../types";
 import {
+  setSnackbarMessage,
+  setSnackbarVariant,
+  toggleSnackbar,
+} from "../app/appSlice";
+import {
   createRun,
   deleteRun,
   setRunStateList,
@@ -51,9 +56,13 @@ export const runDTOApi = createApi({
       async onQueryStarted(id, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          if (data) dispatch(setRunStateList(data as IRunStateDTO[]));
+          if (data) {
+            dispatch(setRunStateList(data as IRunStateDTO[]));
+          }
         } catch (err) {
-          console.log(`Error fetching run: ${id}!`);
+          dispatch(setSnackbarVariant("error"));
+          dispatch(setSnackbarMessage(`Error fetching data`));
+          dispatch(toggleSnackbar());
         }
       },
     }),
@@ -72,11 +81,12 @@ export const runDTOApi = createApi({
         try {
           const { data } = await queryFulfilled;
           if (data) {
-            console.log("run was created");
             dispatch(createRun(data as IRunStateDTO));
           }
         } catch (err) {
-          console.log(`Error while creating run ${id}`);
+          dispatch(setSnackbarVariant("error"));
+          dispatch(setSnackbarMessage(`Error while creating run ${id}`));
+          dispatch(toggleSnackbar());
         }
       },
     }),
@@ -90,11 +100,15 @@ export const runDTOApi = createApi({
         try {
           const { data } = await queryFulfilled;
           if (data) {
-            console.log("data was updated");
             dispatch(updateRun(data as IRunStateDTO));
           }
         } catch (err) {
-          console.log(`Error updating run with id: ${id}`);
+          console.log();
+          dispatch(setSnackbarVariant("error"));
+          dispatch(
+            setSnackbarMessage(`Error while updating run with id: ${id}`)
+          );
+          dispatch(toggleSnackbar());
         }
       },
     }),
@@ -106,10 +120,13 @@ export const runDTOApi = createApi({
       async onQueryStarted(id, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled;
-          console.log("data was erased");
           dispatch(deleteRun(id));
         } catch (err) {
-          console.log(`Error deleting run with id: ${id}`);
+          dispatch(setSnackbarVariant("error"));
+          dispatch(
+            setSnackbarMessage(`Error while deleting run with id: ${id}`)
+          );
+          dispatch(toggleSnackbar());
         }
       },
     }),

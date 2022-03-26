@@ -13,7 +13,7 @@ import {
   setRunState,
 } from "../../../store/features/run/runSlice";
 import { useRunFormValidation } from "../../../hooks/useRunFormValidation";
-import { useSnackbar } from "notistack";
+import { useMessage } from "../../../hooks/useMessage";
 export interface IRun {
   id?: number;
   isUpdate?: boolean;
@@ -29,7 +29,7 @@ export const Run = ({ id = 0, isUpdate = false }: IRun) => {
   const navigate = useNavigate();
   const [addRun] = useCreateMutation();
   const [update] = useUpdateMutation();
-  const { enqueueSnackbar: message } = useSnackbar();
+  const message = useMessage();
 
   const { isDropOffValid, isFormValid, isLoadNumberValid } =
     useRunFormValidation(runList, state, isUpdate);
@@ -47,9 +47,9 @@ export const Run = ({ id = 0, isUpdate = false }: IRun) => {
     try {
       await addRun(preparedData).unwrap();
       handleClear();
-      message("Run was saved successfully", { color: "success" });
+      message("Run was saved successfully", "success");
     } catch (err) {
-      message(`${err}`, { color: "error" });
+      message(`${err}`, "error");
     }
   }, [state, currUser, handleClear, addRun, message]);
 
@@ -57,12 +57,11 @@ export const Run = ({ id = 0, isUpdate = false }: IRun) => {
     const preparedData: IRun = { ...state, ...currUser, id } as IRun;
     try {
       await update({ id, ...preparedData });
-      message("Run was updated successfully", { color: "success" });
-      navigate(-1);
+      message("Run was updated successfully", "success");
     } catch (err) {
-      message(`${err}`, { color: "error" });
+      message(`${err}`, "error");
     }
-  }, [id, state, currUser, update, navigate, message]);
+  }, [id, state, currUser, update, message]);
 
   type TKey = keyof typeof initialState;
   const handleChange = useCallback(
@@ -228,6 +227,9 @@ export const Run = ({ id = 0, isUpdate = false }: IRun) => {
           )}
         </Grid>
       </Grid>
+      <Button onClick={() => message("Important Message", "success")}>
+        Message
+      </Button>
     </Grid>
   );
 };

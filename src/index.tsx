@@ -6,15 +6,12 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import { store } from "./store/store";
 import { ThemeProvider } from "./theme/ThemeProvider";
-import { SnackbarProvider } from "notistack";
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <ThemeProvider>
-        <SnackbarProvider maxSnack={3}>
-          <App />
-        </SnackbarProvider>
+        <App />
       </ThemeProvider>
     </Provider>
   </React.StrictMode>,

@@ -37,7 +37,7 @@ export const TableRows = ({ data }: ITableRows) => {
       dialog(
         EDialogType.YES_NO,
         "delete",
-        "Are you sure you want to delete this record?"
+        "Are you sure you want to delete this record?, Once deleted it cannot be recovered."
       );
     },
     [dialog]
