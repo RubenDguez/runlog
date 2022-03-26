@@ -227,9 +227,6 @@ export const Run = ({ id = 0, isUpdate = false }: IRun) => {
           )}
         </Grid>
       </Grid>
-      <Button onClick={() => message("Important Message", "success")}>
-        Message
-      </Button>
     </Grid>
   );
 };
