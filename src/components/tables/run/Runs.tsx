@@ -150,7 +150,7 @@ export const Runs = ({ year = 0, week = 0 }: IRunByWeek) => {
               return null;
             })
         )}
-      <Fab action={() => navigate("/run-form")}>
+      <Fab action={() => navigate("/authorized/run-form")}>
         <AddIcon sx={{ fontSize: "3rem" }} />
       </Fab>
     </>

@@ -62,7 +62,7 @@ export const TableRows = ({ data }: ITableRows) => {
             <IconButton
               size="small"
               onClick={() => {
-                navigate(`/run-form/${data.id}`);
+                navigate(`/authorized/run-form/${data.id}`);
               }}
             >
               <FileOpenIcon fontSize="small" />

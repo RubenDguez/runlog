@@ -18,10 +18,12 @@ export const App = () => {
       <Snackbar />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Authorized />}>
-            {routes.map((m, i) => (
-              <Route key={i} path={m.path} element={m.element} />
-            ))}
+          <Route path="/authorized" element={<Authorized />}>
+            {routes
+              .filter((f) => f.authorization === true)
+              .map((m, i) => (
+                <Route key={i} path={m.path} element={m.element} />
+              ))}
           </Route>
         </Routes>
       </BrowserRouter>

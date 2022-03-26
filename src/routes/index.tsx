@@ -12,6 +12,7 @@ export interface IRoute {
   text?: string;
   to?: To;
   icon?: ReactElement;
+  authorization: boolean;
   path: string;
   element: ReactElement;
 }
@@ -20,26 +21,31 @@ export const routes: IRoute[] = [
   {
     text: "Home",
     icon: <HomeIcon />,
-    to: "/",
+    to: "/authorized/",
+    authorization: true,
     path: "",
     element: <Chart />,
   },
   {
     text: "Runs",
     icon: <FormatListNumberedIcon />,
-    to: "/runs",
+    to: "/authorized/runs",
+    authorization: true,
     path: "runs",
     element: <RunFilters />,
   },
   {
-    path: "run-form",
+    authorization: true,
+    path: "/authorized/run-form",
     element: <New />,
   },
   {
-    path: "run-form/:id",
+    authorization: true,
+    path: "/authorized/run-form/:id",
     element: <Update />,
   },
   {
+    authorization: true,
     path: "error",
     element: <Error />,
   },

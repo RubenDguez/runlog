@@ -58,10 +58,11 @@ export const Run = ({ id = 0, isUpdate = false }: IRun) => {
     try {
       await update({ id, ...preparedData });
       message("Run was updated successfully", "success");
+      navigate(-1);
     } catch (err) {
       message(`${err}`, "error");
     }
-  }, [id, state, currUser, update, message]);
+  }, [id, state, currUser, update, message, navigate]);
 
   type TKey = keyof typeof initialState;
   const handleChange = useCallback(
