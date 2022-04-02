@@ -1,4 +1,4 @@
-import { CssBaseline } from "@mui/material";
+import { Container, CssBaseline } from "@mui/material";
 import { Box } from "@mui/system";
 import { Outlet } from "react-router-dom";
 import { ApplicationBar } from "../components/UI/ApplicationBar";
@@ -13,9 +13,9 @@ export const Authorized = () => {
       <ApplicationBar />
       <ApplicationFooter />
 
-      <Box component="main" sx={{ flexGrow: 1, my: 10, px: 4 }}>
+      <Container sx={{ my: 5 }}>
         <Outlet />
-      </Box>
+      </Container>
     </Box>
   );
 };

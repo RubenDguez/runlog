@@ -2,7 +2,11 @@ import { Container, Grid, LinearProgress, Typography } from "@mui/material";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import { Box } from "@mui/system";
 
-export const Loader = () => {
+export interface ILoader {
+  message?: string;
+}
+
+export const Loader = ({ message }: ILoader) => {
   return (
     <Container
       maxWidth="sm"
@@ -45,7 +49,7 @@ export const Loader = () => {
                 variant="body1"
                 sx={{ textAlign: "left", marginBottom: "8px" }}
               >
-                Loading...
+                {message || "Loading..."}
               </Typography>
               <LinearProgress
                 sx={{

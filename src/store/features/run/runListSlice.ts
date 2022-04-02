@@ -11,9 +11,11 @@ const runListSlice = createSlice({
       action.payload.forEach((fe) => {
         state.push(fe);
       });
+      return state;
     },
     createRun(state, action: PayloadAction<IRunStateDTO>) {
       state.push(action.payload);
+      return state;
     },
     updateRun(state, action: PayloadAction<IRunStateDTO>) {
       state = state.filter((f) => f.id !== action.payload.id);

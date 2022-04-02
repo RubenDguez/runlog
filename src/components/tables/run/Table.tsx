@@ -22,19 +22,20 @@ import { useAppSelector } from "../../../store/hooks";
 export interface IRunTable {
   title?: string;
   rows: IRunStateDTO[] | undefined;
+  expand: boolean | null;
 }
 
-export const Table = ({ title = "All Runs", rows }: IRunTable) => {
+export const Table = ({ title = "All Runs", rows, expand }: IRunTable) => {
   const expandAccordion = useAppSelector((state) => state.app.expandAccordion);
-  const [expanded, setExpanded] = useState(expandAccordion);
+  const [expanded, setExpanded] = useState(expand || expandAccordion);
 
   const tootleExpanded = useCallback(() => {
     setExpanded(!expanded);
   }, [expanded]);
 
   useEffect(() => {
-    setExpanded(expandAccordion);
-  }, [expandAccordion]);
+    setExpanded(expand || expandAccordion);
+  }, [expandAccordion, expand]);
 
   const rowsStats: IStatData = useMemo(() => {
     let totalLoadedMiles = 0;

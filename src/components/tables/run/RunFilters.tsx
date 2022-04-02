@@ -1,11 +1,10 @@
 import { Autocomplete, Grid } from "@mui/material";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import { useCallback, useMemo, useState } from "react";
 import {
-  setExpandedAccordion,
   setFilterWeek,
   setFilterYear,
 } from "../../../store/features/app/appSlice";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { TextField } from "../../UI/common";
 import { Runs } from "./Runs";
 
@@ -47,10 +46,6 @@ export const RunFilters = () => {
     },
     [setWeek, dispatch]
   );
-
-  useEffect(() => {
-    dispatch(setExpandedAccordion(true));
-  }, [dispatch]);
 
   return (
     <>

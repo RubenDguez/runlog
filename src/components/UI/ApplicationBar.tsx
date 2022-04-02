@@ -1,31 +1,22 @@
-import { AppBar, IconButton, Switch, Toolbar, Typography } from "@mui/material";
-
-import ArrowRightIcon from "@mui/icons-material/ArrowRight";
-import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
-
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { setTheme, toggleDrawer } from "../../store/features/app/appSlice";
-import { useCallback } from "react";
-
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
+import { AppBar, Toolbar, Typography } from "@mui/material";
+import { useCallback } from "react";
+import { setTheme } from "../../store/features/app/appSlice";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { Switch } from "../UI/common/";
 
 export const ApplicationBar = () => {
   const dispatch = useAppDispatch();
-  const [mode, drawerWidth, drawerExpanded] = useAppSelector((state) => [
+  const [mode, drawerWidth] = useAppSelector((state) => [
     state.app.theme,
     state.app.drawerWidth,
-    state.app.drawerExpanded,
   ]);
 
   const handleThemeChange = useCallback(() => {
     if (mode === "dark") dispatch(setTheme("light"));
     else dispatch(setTheme("dark"));
   }, [dispatch, mode]);
-
-  const handleToggleDrawerExpanded = useCallback(() => {
-    dispatch(toggleDrawer());
-  }, [dispatch]);
 
   return (
     <AppBar
@@ -37,22 +28,9 @@ export const ApplicationBar = () => {
         ml: `${drawerWidth}px`,
         transition: "ease-in-out 0.25s",
       }}
+      variant="outlined"
     >
-      <Toolbar>
-        <IconButton
-          size="small"
-          edge="start"
-          color="inherit"
-          aria-label="menu"
-          sx={{ mr: 2 }}
-          onClick={handleToggleDrawerExpanded}
-        >
-          {!drawerExpanded ? (
-            <ArrowRightIcon fontSize="large" />
-          ) : (
-            <ArrowLeftIcon fontSize="large" />
-          )}
-        </IconButton>
+      <Toolbar variant="dense">
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           Runlog
         </Typography>

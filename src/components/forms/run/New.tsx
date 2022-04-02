@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useAppDispatch } from "../../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import {
   initialState,
   setRunState,
@@ -8,10 +8,11 @@ import { Run } from "./Run";
 
 export const New = () => {
   const dispatch = useAppDispatch();
+  const state = useAppSelector((state) => state.run.loadNumber);
 
   useEffect(() => {
-    dispatch(setRunState(initialState));
-  }, [dispatch]);
+    if (state === 0) dispatch(setRunState(initialState));
+  });
 
   return <Run />;
 };

@@ -8,7 +8,6 @@ export const ApplicationFooter = () => {
   return (
     <AppBar
       position="fixed"
-      elevation={1}
       color="inherit"
       sx={{
         width: `calc(100% - ${drawerWidth}px)`,
@@ -17,6 +16,7 @@ export const ApplicationFooter = () => {
         bottom: 0,
         transition: "ease-in-out 0.25s",
       }}
+      variant="outlined"
     >
       <Toolbar variant="dense">
         <Typography

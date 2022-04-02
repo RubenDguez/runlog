@@ -4,7 +4,7 @@ import {
   useCreateMutation,
   useUpdateMutation,
 } from "../../../store/features/run/runDTOSlice";
-import { Switch, Button, TextField } from "../../UI/common";
+import { SwitchSX, Button, TextField } from "../../UI/common";
 
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
@@ -112,7 +112,7 @@ export const Run = ({ id = 0, isUpdate = false }: IRun) => {
         />
       </Grid>
       <Grid item xs={12} md={6}>
-        <Switch
+        <SwitchSX
           label="Second Load"
           size="small"
           value={state.secondLoad}

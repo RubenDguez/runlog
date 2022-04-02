@@ -50,6 +50,7 @@ export interface IRunStateDTO {
 export interface IApp {
   theme: "light" | "dark";
   expandAccordion: boolean;
+  descendingOrder: boolean;
   filterYear: string | null;
   filterWeek: string | null;
   drawerWidth: number;
