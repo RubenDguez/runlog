@@ -1,10 +1,7 @@
-import CloseIcon from "@mui/icons-material/Close";
-import MenuIcon from "@mui/icons-material/Menu";
 import {
   Box,
   Divider,
   Drawer,
-  IconButton,
   List,
   ListItemButton,
   ListItemIcon,
@@ -12,22 +9,14 @@ import {
   Toolbar,
   useTheme,
 } from "@mui/material";
-import { ReactElement, useCallback } from "react";
+import { ReactElement } from "react";
 import { NavLink, To } from "react-router-dom";
 import { routes, userSetting } from "../../routes";
-import { toggleDrawer } from "../../store/features/app/appSlice";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { useAppSelector } from "../../store/hooks";
 
 export const ApplicationDrawer = () => {
-  const [drawerWidth, drawerExpanded] = useAppSelector((state) => [
-    state.app.drawerWidth,
-    state.app.drawerExpanded,
-  ]);
-  const dispatch = useAppDispatch();
-
-  const handleToggleDrawerExpanded = useCallback(() => {
-    dispatch(toggleDrawer());
-  }, [dispatch]);
+  const theme = useTheme();
+  const [drawerWidth] = useAppSelector((state) => [state.app.drawerWidth]);
 
   return (
     <Drawer
@@ -40,25 +29,14 @@ export const ApplicationDrawer = () => {
           boxSizing: "border-box",
           transition: "ease-in-out 0.25s",
         },
+        [theme.breakpoints.up("xs")]: {
+          zIndex: theme.zIndex.drawer - 100,
+        },
       }}
       variant="permanent"
       anchor="left"
     >
-      <Toolbar
-        variant="dense"
-        sx={{
-          "&.MuiToolbar-root": { paddingLeft: "8px" },
-          display: "flex",
-          justifyContent: "left",
-        }}
-      >
-        <IconButton
-          sx={{ "&.MuiIconButton-root": { borderRadius: "0px" } }}
-          onClick={handleToggleDrawerExpanded}
-        >
-          {!drawerExpanded ? <MenuIcon /> : <CloseIcon />}
-        </IconButton>
-      </Toolbar>
+      <Toolbar variant="dense" />
       <Divider />
       <List>
         {routes.map(

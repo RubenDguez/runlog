@@ -8,10 +8,10 @@ import { Run } from "./Run";
 
 export const New = () => {
   const dispatch = useAppDispatch();
-  const state = useAppSelector((state) => state.run.loadNumber);
+  const loadNumber = useAppSelector((state) => state.run.loadNumber);
 
   useEffect(() => {
-    if (state === 0) dispatch(setRunState(initialState));
+    if (loadNumber === 0) dispatch(setRunState(initialState));
   });
 
   return <Run />;

@@ -3,7 +3,6 @@ import {
   blue,
   cyan,
   green,
-  grey,
   orange,
   pink,
   teal,
@@ -12,7 +11,7 @@ import {
 
 // https://mui.com/customization/default-theme/
 
-export const darkTheme = createTheme({
+export const lightTheme = createTheme({
   palette: {
     mode: "dark",
     primary: {
@@ -59,6 +58,7 @@ export const darkTheme = createTheme({
   },
   typography: {
     fontSize: 12,
+    fontFamily: "Roboto",
   },
   shape: {
     borderRadius: 0,
@@ -92,93 +92,13 @@ export const darkTheme = createTheme({
   ],
 });
 
-export const lightTheme = createTheme({
+export const darkTheme = createTheme({
+  palette: {
+    mode: "dark",
+  },
   typography: {
     fontSize: 12,
-  },
-  palette: {
-    mode: "light",
-    primary: {
-      main: grey[500],
-      light: grey[500],
-      dark: grey[500],
-      contrastText: "#000",
-    },
-    secondary: {
-      main: grey[500],
-      light: grey[500],
-      dark: grey[500],
-      contrastText: "#000",
-    },
-    error: {
-      main: grey[500],
-      light: grey[500],
-      dark: grey[500],
-      contrastText: "#000",
-    },
-    warning: {
-      main: grey[500],
-      light: grey[500],
-      dark: grey[500],
-      contrastText: "#000",
-    },
-    info: {
-      main: grey[500],
-      light: grey[500],
-      dark: grey[500],
-      contrastText: "#000",
-    },
-    success: {
-      main: grey[500],
-      light: grey[500],
-      dark: grey[500],
-      contrastText: "#000",
-    },
-    text: {
-      primary: "#000",
-      secondary: "#000",
-      disabled: "#000",
-    },
-    background: {
-      paper: "#fff",
-      default: "#fff",
-    },
-    action: {
-      active: grey[500],
-      hover: grey[500],
-      hoverOpacity: 0.04,
-      selected: grey[800],
-      selectedOpacity: 0.08,
-      disabled: grey[300],
-      disabledBackground: grey[200],
-      disabledOpacity: 0.38,
-      focus: grey[200],
-      focusOpacity: 0.12,
-      activatedOpacity: 0.12,
-    },
-    common: {
-      black: "#000",
-      white: "#fff",
-    },
-    grey: {
-      50: "#fafafa",
-      100: "#f5f5f5",
-      200: "#eeeeee",
-      300: "#e0e0e0",
-      400: "#bdbdbd",
-      500: "#9e9e9e",
-      600: "#757575",
-      700: "#616161",
-      800: "#424242",
-      900: "#212121",
-      A100: "#f5f5f5",
-      A200: "#eeeeee",
-      A400: "#bdbdbd",
-      A700: "#616161",
-    },
-    contrastThreshold: 3,
-    tonalOffset: 0.2,
-    divider: "rgba(255, 255, 255, 0.12)",
+    fontFamily: "Roboto",
   },
   shape: {
     borderRadius: 0,

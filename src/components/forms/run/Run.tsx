@@ -48,10 +48,11 @@ export const Run = ({ id = 0, isUpdate = false }: IRun) => {
       await addRun(preparedData).unwrap();
       handleClear();
       message("Run was saved successfully", "success");
+      dispatch(setRunState(initialState));
     } catch (err) {
       message(`${err}`, "error");
     }
-  }, [state, currUser, handleClear, addRun, message]);
+  }, [state, currUser, handleClear, addRun, message, dispatch]);
 
   const handleUpdate = useCallback(async () => {
     const preparedData: IRun = { ...state, ...currUser, id } as IRun;

@@ -1,3 +1,6 @@
+import CheckIcon from "@mui/icons-material/Check";
+import DeleteIcon from "@mui/icons-material/Delete";
+import FileOpenIcon from "@mui/icons-material/FileOpen";
 import {
   Box,
   IconButton,
@@ -6,18 +9,15 @@ import {
   TableRow,
 } from "@mui/material";
 import moment from "moment";
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDialog } from "../../../hooks/useDialog";
+import { setDialogClear } from "../../../store/features/app/appSlice";
+import { useDeleteMutation } from "../../../store/features/run/runDTOSlice";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { EDialogResponse, EDialogType, IRunStateDTO } from "../../../types";
 import { toCurrency, toLocalString } from "../../../utils";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import FileOpenIcon from "@mui/icons-material/FileOpen";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { useNavigate } from "react-router-dom";
-import { useDeleteMutation } from "../../../store/features/run/runDTOSlice";
 import { Tooltip } from "../../UI/common/Tooltip";
-import { useCallback, useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../../store/hooks";
-import { setDialogClear } from "../../../store/features/app/appSlice";
-import { useDialog } from "../../../hooks/useDialog";
 
 interface ITableRows {
   data: IRunStateDTO;
@@ -95,7 +95,7 @@ export const TableRows = ({ data }: ITableRows) => {
         {moment(data.dropOffDate.substring(0, 10)).format("MMM DD YYYY")}
       </TableCell>
       <TableCell align="center">
-        {data.secondLoad && <CheckCircleIcon fontSize="small" />}
+        {data.secondLoad && <CheckIcon fontSize="small" />}
       </TableCell>
       <ColoredTableCell align="right">
         {toLocalString(data.loadedMiles)}

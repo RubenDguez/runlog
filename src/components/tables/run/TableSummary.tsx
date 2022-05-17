@@ -19,13 +19,12 @@ interface IStats {
 export const TableSummary = ({ data }: IStats) => {
   return (
     <TableRow>
-      <TableCell></TableCell>
-      <TableCell></TableCell>
-      <TableCell></TableCell>
-      <TableCell></TableCell>
-      <TableCell></TableCell>
-      <TableCell></TableCell>
-      <TableCell></TableCell>
+      {Array(7)
+        .fill(0)
+        .map((_) => (
+          <TableCell></TableCell>
+        ))}
+
       <TableCell align="right">
         {toLocalString(data.totalLoadedMiles)}
       </TableCell>

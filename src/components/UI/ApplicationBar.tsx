@@ -1,17 +1,28 @@
+import CloseIcon from "@mui/icons-material/Close";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
-import { AppBar, Toolbar, Typography } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import {
+  AppBar,
+  IconButton,
+  Toolbar,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import { useCallback } from "react";
-import { setTheme } from "../../store/features/app/appSlice";
+import { setTheme, toggleDrawer } from "../../store/features/app/appSlice";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { Switch } from "../UI/common/";
 
 export const ApplicationBar = () => {
+  const drawerExpanded = useAppSelector((state) => state.app.drawerExpanded);
   const dispatch = useAppDispatch();
-  const [mode, drawerWidth] = useAppSelector((state) => [
-    state.app.theme,
-    state.app.drawerWidth,
-  ]);
+  const theme = useTheme();
+  const [mode] = useAppSelector((state) => [state.app.theme]);
+
+  const handleToggleDrawerExpanded = useCallback(() => {
+    dispatch(toggleDrawer());
+  }, [dispatch]);
 
   const handleThemeChange = useCallback(() => {
     if (mode === "dark") dispatch(setTheme("light"));
@@ -21,16 +32,23 @@ export const ApplicationBar = () => {
   return (
     <AppBar
       position="fixed"
-      elevation={1}
       color="inherit"
       sx={{
-        width: `calc(100% - ${drawerWidth}px)`,
-        ml: `${drawerWidth}px`,
         transition: "ease-in-out 0.25s",
+        zIndex: theme.zIndex.appBar + 100,
+        [theme.breakpoints.up("xs")]: {
+          width: "100%",
+        },
       }}
       variant="outlined"
     >
       <Toolbar variant="dense">
+        <IconButton
+          sx={{ "&.MuiIconButton-root": { borderRadius: "0px" }, mr: 5 }}
+          onClick={handleToggleDrawerExpanded}
+        >
+          {!drawerExpanded ? <MenuIcon /> : <CloseIcon />}
+        </IconButton>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           Runlog
         </Typography>
